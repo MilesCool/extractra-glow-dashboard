@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Navigation } from './Navigation'
-import { CheckCircle, Clock, FileText, Search, Download, ArrowLeft } from 'lucide-react'
+import { CheckCircle, Clock, FileText, Search, Download, ArrowLeft, Loader2 } from 'lucide-react'
 
 interface ExtractionDashboardProps {
   url: string
@@ -19,6 +19,8 @@ interface StageInfo {
   description: string
   status: ExtractionStage
   icon: React.ComponentType<any>
+  progress?: number
+  details?: string
 }
 
 export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
@@ -28,28 +30,32 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   const [isCompleted, setIsCompleted] = useState(false)
   const [overallProgress, setOverallProgress] = useState(0)
 
-  const stages: StageInfo[] = [
+  const [stageStatuses, setStageStatuses] = useState<StageInfo[]>([
     {
       name: 'Page Discovery',
       description: 'Discovering and mapping website structure',
       status: 'pending',
-      icon: Search
+      icon: Search,
+      progress: 0,
+      details: 'Waiting to start...'
     },
     {
       name: 'Content Extraction', 
       description: 'Extracting relevant data based on requirements',
       status: 'pending',
-      icon: FileText
+      icon: FileText,
+      progress: 0,
+      details: 'Waiting to start...'
     },
     {
       name: 'Result Integration',
       description: 'Processing and formatting extracted data',
       status: 'pending',
-      icon: CheckCircle
+      icon: CheckCircle,
+      progress: 0,
+      details: 'Waiting to start...'
     }
-  ]
-
-  const [stageStatuses, setStageStatuses] = useState(stages)
+  ])
 
   const startExtraction = () => {
     if (!requirements.trim()) return
@@ -59,29 +65,104 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   }
 
   const simulateExtraction = () => {
-    // Simulate the extraction process
     let stage = 0
     
     const updateStage = () => {
-      setStageStatuses(prev => prev.map((s, index) => ({
-        ...s,
-        status: index < stage ? 'completed' : index === stage ? 'in-progress' : 'pending'
-      })))
+      // Update stage statuses
+      setStageStatuses(prev => prev.map((s, index) => {
+        if (index < stage) {
+          return { ...s, status: 'completed' as ExtractionStage, progress: 100 }
+        } else if (index === stage) {
+          return { ...s, status: 'in-progress' as ExtractionStage }
+        } else {
+          return { ...s, status: 'pending' as ExtractionStage, progress: 0 }
+        }
+      }))
       
       setCurrentStage(stage)
-      setOverallProgress(((stage + 1) / 3) * 100)
       
-      if (stage < 2) {
-        stage++
-        setTimeout(updateStage, 3000) // 3 seconds per stage
-      } else {
-        // Complete the last stage
-        setTimeout(() => {
-          setStageStatuses(prev => prev.map(s => ({ ...s, status: 'completed' as ExtractionStage })))
-          setIsCompleted(true)
-          setOverallProgress(100)
-        }, 2000)
+      // Simulate progress for current stage
+      if (stage === 0) {
+        // Page Discovery stage
+        let discoveredPages = 0
+        const maxPages = 15
+        const discoveryInterval = setInterval(() => {
+          discoveredPages += Math.floor(Math.random() * 3) + 1
+          if (discoveredPages > maxPages) discoveredPages = maxPages
+          
+          const progress = (discoveredPages / maxPages) * 100
+          setStageStatuses(prev => prev.map((s, index) => 
+            index === stage ? {
+              ...s,
+              progress,
+              details: `Discovered ${discoveredPages} subpages`
+            } : s
+          ))
+          
+          if (discoveredPages >= maxPages) {
+            clearInterval(discoveryInterval)
+            setTimeout(() => {
+              stage++
+              if (stage < 3) updateStage()
+            }, 500)
+          }
+        }, 300)
+      } else if (stage === 1) {
+        // Content Extraction stage
+        let extractedPages = 0
+        const totalPages = 15
+        const extractionInterval = setInterval(() => {
+          extractedPages += 1
+          if (extractedPages > totalPages) extractedPages = totalPages
+          
+          const progress = (extractedPages / totalPages) * 100
+          setStageStatuses(prev => prev.map((s, index) => 
+            index === stage ? {
+              ...s,
+              progress,
+              details: `Extracted ${extractedPages}/${totalPages} pages`
+            } : s
+          ))
+          
+          if (extractedPages >= totalPages) {
+            clearInterval(extractionInterval)
+            setTimeout(() => {
+              stage++
+              if (stage < 3) updateStage()
+            }, 500)
+          }
+        }, 200)
+      } else if (stage === 2) {
+        // Result Integration stage
+        let integrationProgress = 0
+        const integrationSteps = ['Processing data...', 'Formatting results...', 'Generating file...', 'Finalizing...']
+        let currentStep = 0
+        
+        const integrationInterval = setInterval(() => {
+          integrationProgress += 25
+          
+          setStageStatuses(prev => prev.map((s, index) => 
+            index === stage ? {
+              ...s,
+              progress: integrationProgress,
+              details: integrationSteps[currentStep] || 'Completing...'
+            } : s
+          ))
+          
+          currentStep++
+          
+          if (integrationProgress >= 100) {
+            clearInterval(integrationInterval)
+            setTimeout(() => {
+              setStageStatuses(prev => prev.map(s => ({ ...s, status: 'completed' as ExtractionStage, progress: 100 })))
+              setIsCompleted(true)
+              setOverallProgress(100)
+            }, 500)
+          }
+        }, 800)
       }
+      
+      setOverallProgress(((stage + 1) / 3) * 100)
     }
     
     setTimeout(updateStage, 1000)
@@ -169,7 +250,7 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                       return (
                         <div 
                           key={stage.name}
-                          className={`flex items-start gap-3 p-3 rounded-lg transition-all duration-300 ${
+                          className={`flex items-start gap-3 p-4 rounded-lg transition-all duration-300 ${
                             isActive ? 'bg-primary/10 border border-primary/20' : 'bg-muted/30'
                           }`}
                         >
@@ -177,14 +258,18 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                             stage.status === 'completed' 
                               ? 'bg-green-500 text-white' 
                               : stage.status === 'in-progress'
-                              ? 'bg-primary text-white animate-pulse-glow'
+                              ? 'bg-primary text-white'
                               : 'bg-muted text-muted-foreground'
                           }`}>
-                            <Icon className="h-4 w-4" />
+                            {stage.status === 'in-progress' ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Icon className="h-4 w-4" />
+                            )}
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 mb-1">
                               <h3 className="font-semibold">{stage.name}</h3>
                               <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                                 stage.status === 'completed' 
@@ -197,13 +282,20 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                                  stage.status === 'in-progress' ? 'In Progress' : 'Pending'}
                               </span>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <p className="text-sm text-muted-foreground mb-2">
                               {stage.description}
                             </p>
                             
+                            {/* Stage specific details */}
+                            {stage.details && (
+                              <p className="text-sm font-medium text-foreground mb-2">
+                                {stage.details}
+                              </p>
+                            )}
+                            
                             {stage.status === 'in-progress' && (
                               <div className="mt-2">
-                                <Progress value={75} className="h-1" />
+                                <Progress value={stage.progress || 0} className="h-2" />
                               </div>
                             )}
                           </div>
@@ -322,7 +414,9 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                           <tr>
                             <td className="py-2 px-3 text-muted-foreground">...</td>
                             <td className="py-2 px-3 text-muted-foreground">...</td>
-                            <td className="py-2 px-3 text-muted-foreground">...</td>
+                            <td className="py-2 px-3 text-muted-foregroun
+
+">...</td>
                           </tr>
                         </tbody>
                       </table>

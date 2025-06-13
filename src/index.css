@@ -3,81 +3,81 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Extractra Design System - Warm & Professional */
+/* Extractra Design System - Clean & Professional */
 
 @layer base {
   :root {
-    /* Light Mode - Warm & Bright */
-    --background: 30 15% 96%;  /* Soft off-white with warm undertone */
-    --foreground: 210 15% 20%; /* Dark gray for text */
+    /* Light Mode - Clean & Bright */
+    --background: 0 0% 100%;        /* Pure white */
+    --foreground: 220 14% 14%;      /* Dark gray for text */
 
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 20%;
+    --card-foreground: 220 14% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 20%;
+    --popover-foreground: 220 14% 14%;
 
-    --primary: 25 95% 53%;     /* Vibrant warm orange */
+    --primary: 220 100% 50%;        /* Clean blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 25% 90%;   /* Light warm gray */
-    --secondary-foreground: 210 15% 20%;
+    --secondary: 220 14% 96%;       /* Light gray */
+    --secondary-foreground: 220 14% 14%;
 
-    --muted: 30 20% 92%;       /* Very light warm background */
-    --muted-foreground: 210 10% 45%;
+    --muted: 220 14% 96%;           /* Light background */
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 35 85% 60%;      /* Warm amber accent */
+    --accent: 210 100% 56%;         /* Bright blue accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 85%;      /* Warm border */
-    --input: 30 15% 85%;
-    --ring: 25 95% 53%;        /* Primary orange for focus */
+    --border: 220 13% 91%;          /* Light border */
+    --input: 220 13% 91%;
+    --ring: 220 100% 50%;           /* Primary blue for focus */
 
     --radius: 0.75rem;
 
-    /* Custom Extractra Variables */
-    --warm-surface: 30 25% 94%; /* Warm surface for cards */
-    --warm-text: 210 15% 35%;   /* Slightly warmer text */
-    --progress-bg: 30 20% 88%;  /* Progress bar background */
+    /* Custom Variables */
+    --surface: 220 14% 98%;         /* Surface for cards */
+    --text: 220 14% 20%;            /* Text color */
+    --progress-bg: 220 13% 91%;     /* Progress bar background */
   }
 
   .dark {
-    /* Dark Mode - Warm & Cozy */
-    --background: 210 15% 12%;  /* Deep warm gray */
-    --foreground: 30 15% 90%;   /* Soft light gray */
+    /* Dark Mode - Pure Black */
+    --background: 0 0% 0%;          /* Pure black */
+    --foreground: 0 0% 95%;         /* Light gray */
 
-    --card: 210 15% 15%;        /* Slightly lighter surface */
-    --card-foreground: 30 15% 90%;
+    --card: 0 0% 4%;                /* Very dark surface */
+    --card-foreground: 0 0% 95%;
 
-    --popover: 210 15% 15%;
-    --popover-foreground: 30 15% 90%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 25 95% 58%;      /* Slightly brighter orange for dark mode */
+    --primary: 220 100% 60%;        /* Brighter blue for dark mode */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 15% 20%;   /* Dark warm surface */
-    --secondary-foreground: 30 15% 85%;
+    --secondary: 0 0% 8%;           /* Dark surface */
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 210 15% 18%;       /* Muted dark surface */
-    --muted-foreground: 30 10% 65%;
+    --muted: 0 0% 8%;               /* Muted dark surface */
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 35 85% 65%;       /* Brighter amber for visibility */
+    --accent: 210 100% 65%;         /* Brighter blue accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 25%;      /* Dark border */
-    --input: 210 15% 25%;
-    --ring: 25 95% 58%;
+    --border: 0 0% 15%;             /* Dark border */
+    --input: 0 0% 15%;
+    --ring: 220 100% 60%;
 
     /* Custom Dark Mode Variables */
-    --warm-surface: 210 15% 17%; /* Dark warm surface */
-    --warm-text: 30 15% 80%;     /* Warm light text */
-    --progress-bg: 210 15% 22%;  /* Dark progress background */
+    --surface: 0 0% 6%;             /* Dark surface */
+    --text: 0 0% 90%;               /* Light text */
+    --progress-bg: 0 0% 15%;        /* Dark progress background */
   }
 }
 
@@ -92,12 +92,12 @@
   }
 
   /* Custom utility classes */
-  .warm-surface {
-    background-color: hsl(var(--warm-surface));
+  .surface {
+    background-color: hsl(var(--surface));
   }
   
-  .warm-text {
-    color: hsl(var(--warm-text));
+  .text-custom {
+    color: hsl(var(--text));
   }
   
   .progress-bg {
