@@ -29,14 +29,14 @@ export function Navigation() {
           <div className="hidden md:flex items-center space-x-6">
             <Button 
               variant="ghost" 
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground hover:bg-transparent"
               onClick={() => scrollToSection('how-it-works')}
             >
               How it works
             </Button>
             <Button 
               variant="ghost" 
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground hover:bg-transparent"
               onClick={() => scrollToSection('features')}
             >
               Features

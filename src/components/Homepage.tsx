@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Navigation } from './Navigation'
@@ -11,6 +11,23 @@ import { Footer } from './Footer'
 export function Homepage() {
   const [url, setUrl] = useState('')
   const [isExtracting, setIsExtracting] = useState(false)
+  const [displayText, setDisplayText] = useState('')
+  
+  const fullText = "Automatically discover pages, extract content, and integrate the output into structured data files. Powered by multi-agent intelligence."
+
+  useEffect(() => {
+    let currentIndex = 0
+    const timer = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayText(fullText.slice(0, currentIndex))
+        currentIndex++
+      } else {
+        clearInterval(timer)
+      }
+    }, 50)
+
+    return () => clearInterval(timer)
+  }, [])
 
   const handleStart = () => {
     if (url.trim()) {
@@ -46,10 +63,9 @@ export function Homepage() {
               <span className="text-foreground">Data Extraction</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Automatically discover pages, extract content, and integrate the output into structured data files. 
-              Powered by multi-agent intelligence.
-            </p>
+            <div className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed min-h-[3rem]">
+              <span className="typing-text">{displayText}</span>
+            </div>
           </div>
 
           {/* URL Input Section */}
@@ -72,7 +88,7 @@ export function Homepage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200"
                 />
                 <Button
                   onClick={handleStart}

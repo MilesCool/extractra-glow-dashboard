@@ -17,7 +17,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 14% 14%;
 
-    --primary: 220 100% 50%;        /* Clean blue */
+    --primary: 270 95% 65%;         /* Purple primary */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14% 96%;       /* Light gray */
@@ -26,7 +26,7 @@
     --muted: 220 14% 96%;           /* Light background */
     --muted-foreground: 220 9% 46%;
 
-    --accent: 210 100% 56%;         /* Bright blue accent */
+    --accent: 285 85% 70%;          /* Purple accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -34,7 +34,7 @@
 
     --border: 220 13% 91%;          /* Light border */
     --input: 220 13% 91%;
-    --ring: 220 100% 50%;           /* Primary blue for focus */
+    --ring: 270 95% 65%;            /* Purple for focus */
 
     --radius: 0.75rem;
 
@@ -55,7 +55,7 @@
     --popover: 0 0% 4%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 220 100% 60%;        /* Brighter blue for dark mode */
+    --primary: 270 95% 70%;         /* Brighter purple for dark mode */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 8%;           /* Dark surface */
@@ -64,7 +64,7 @@
     --muted: 0 0% 8%;               /* Muted dark surface */
     --muted-foreground: 0 0% 65%;
 
-    --accent: 210 100% 65%;         /* Brighter blue accent */
+    --accent: 285 85% 75%;          /* Brighter purple accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 75% 55%;
@@ -72,7 +72,7 @@
 
     --border: 0 0% 15%;             /* Dark border */
     --input: 0 0% 15%;
-    --ring: 220 100% 60%;
+    --ring: 270 95% 70%;
 
     /* Custom Dark Mode Variables */
     --surface: 0 0% 6%;             /* Dark surface */
@@ -108,4 +108,23 @@
 /* Smooth theme transitions */
 * {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 50% { border-color: transparent; }
+  51%, 100% { border-color: hsl(var(--primary)); }
+}
+
+.typing-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid;
+  animation: typing 3s steps(30, end), blink 1s step-end infinite;
 }
