@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Navigation } from './Navigation'
 import { ExtractionDashboard } from './ExtractionDashboard'
+import { HowItWorksSection } from './HowItWorksSection'
+import { FeaturesSection } from './FeaturesSection'
 
 export function Homepage() {
   const [url, setUrl] = useState('')
@@ -31,7 +33,7 @@ export function Homepage() {
       <Navigation />
       
       {/* Hero Section */}
-      <main className="flex-1 flex items-center justify-center px-6 py-20">
+      <main id="hero" className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="max-w-3xl mx-auto text-center space-y-12 animate-fade-in">
           {/* Main Heading */}
           <div className="space-y-6">
@@ -131,6 +133,12 @@ export function Homepage() {
           </div>
         </div>
       </main>
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
+
+      {/* Features Section */}
+      <FeaturesSection />
     </div>
   )
 }

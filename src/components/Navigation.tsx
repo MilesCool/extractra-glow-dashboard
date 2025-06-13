@@ -1,8 +1,16 @@
 
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from './ThemeToggle'
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 
 export function Navigation() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <nav className="w-full border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -16,24 +24,50 @@ export function Navigation() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+            <Button 
+              variant="ghost" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => scrollToSection('how-it-works')}
+            >
               How it works
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+            <Button 
+              variant="ghost" 
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => scrollToSection('features')}
+            >
               Features
             </Button>
-            <Button variant="outline">
-              Login
-            </Button>
+            
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="outline">
+                  Login
+                </Button>
+              </SignInButton>
+            </SignedOut>
+            
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            
             <ThemeToggle />
           </div>
 
           {/* Mobile menu */}
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
-            <Button variant="outline" size="sm">
-              Menu
-            </Button>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="outline" size="sm">
+                  Login
+                </Button>
+              </SignInButton>
+            </SignedOut>
+            
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </div>
       </div>
