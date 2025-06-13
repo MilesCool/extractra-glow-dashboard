@@ -1,5 +1,5 @@
 
-import { Zap, Shield, Cpu, Globe, Database, Clock } from 'lucide-react'
+import { Zap, Shield, Cpu, Globe, Database, Clock, Play } from 'lucide-react'
 
 export function FeaturesSection() {
   const features = [
@@ -29,9 +29,9 @@ export function FeaturesSection() {
       description: "Get clean, organized data in your preferred format - CSV, JSON, Excel, or custom schemas."
     },
     {
-      icon: Clock,
-      title: "Real-Time Processing",
-      description: "Monitor extraction progress in real-time with detailed status updates and live feedback."
+      icon: Play,
+      title: "Background Processing",
+      description: "Runs seamlessly in the background without affecting your normal operations or browsing experience."
     }
   ]
 
@@ -51,7 +51,7 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="p-8 rounded-lg warm-surface border border-border hover:shadow-lg transition-all duration-300 group"
+              className="p-8 rounded-lg surface border border-border hover:shadow-lg transition-all duration-300 group"
             >
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <feature.icon className="w-6 h-6 text-white" />

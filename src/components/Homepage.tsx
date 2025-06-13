@@ -6,6 +6,7 @@ import { Navigation } from './Navigation'
 import { ExtractionDashboard } from './ExtractionDashboard'
 import { HowItWorksSection } from './HowItWorksSection'
 import { FeaturesSection } from './FeaturesSection'
+import { Footer } from './Footer'
 
 export function Homepage() {
   const [url, setUrl] = useState('')
@@ -53,6 +54,16 @@ export function Homepage() {
 
           {/* URL Input Section */}
           <div className="space-y-8">
+            {/* Emphasis text above input */}
+            <div className="space-y-2">
+              <h2 className="text-2xl font-semibold text-foreground">
+                一键获取所需数据
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                输入网站地址，智能提取您需要的所有数据
+              </p>
+            </div>
+
             <div className="relative max-w-2xl mx-auto">
               <div className="flex gap-3">
                 <Input
@@ -75,7 +86,7 @@ export function Homepage() {
 
             {/* Slogan */}
             <div className="space-y-4">
-              <p className="text-lg font-medium warm-text">
+              <p className="text-lg font-medium text-custom">
                 Transform any website into structured data in seconds
               </p>
               
@@ -96,41 +107,6 @@ export function Homepage() {
               </div>
             </div>
           </div>
-
-          {/* How it works preview */}
-          <div className="mt-16">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="space-y-3 p-6 rounded-lg warm-surface border border-border hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
-                  1
-                </div>
-                <h3 className="font-semibold text-lg">Page Discovery</h3>
-                <p className="text-muted-foreground">
-                  Our agents automatically explore and map your target website's structure
-                </p>
-              </div>
-              
-              <div className="space-y-3 p-6 rounded-lg warm-surface border border-border hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white font-bold text-lg">
-                  2
-                </div>
-                <h3 className="font-semibold text-lg">Content Extraction</h3>
-                <p className="text-muted-foreground">
-                  Intelligent extraction based on your specific requirements and data needs
-                </p>
-              </div>
-              
-              <div className="space-y-3 p-6 rounded-lg warm-surface border border-border hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
-                  3
-                </div>
-                <h3 className="font-semibold text-lg">Result Integration</h3>
-                <p className="text-muted-foreground">
-                  Clean, structured data delivered in your preferred format ready to use
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
 
@@ -139,6 +115,9 @@ export function Homepage() {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
