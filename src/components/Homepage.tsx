@@ -63,8 +63,8 @@ export function Homepage() {
               <span className="text-foreground">Data Extraction</span>
             </h1>
             
-            <div className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed min-h-[3rem]">
-              <span className="typing-text">{displayText}</span>
+            <div className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed min-h-[3rem] px-4">
+              <span className="typing-text inline-block break-words whitespace-normal">{displayText}</span>
             </div>
           </div>
 
