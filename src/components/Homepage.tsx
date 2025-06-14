@@ -36,11 +36,6 @@ export function Homepage() {
     }
   }
 
-  const handleQuickDemo = () => {
-    setUrl('https://example.com')
-    setIsExtracting(true)
-  }
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleStart()
@@ -122,17 +117,6 @@ export function Homepage() {
                     Start
                   </Button>
                 </div>
-              </div>
-
-              {/* Quick Demo Button */}
-              <div className="flex justify-center">
-                <Button
-                  onClick={handleQuickDemo}
-                  variant="outline"
-                  className="px-6 py-3 text-sm bg-background/70 backdrop-blur-sm border-2 border-border hover:border-primary transition-all duration-200 hover:scale-105"
-                >
-                  Try Quick Demo →
-                </Button>
               </div>
 
               {/* Slogan */}
