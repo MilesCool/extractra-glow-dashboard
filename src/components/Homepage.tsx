@@ -70,7 +70,7 @@ export function Homepage() {
 
           {/* URL Input Section */}
           <div className="space-y-8">
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-3xl mx-auto">
+            <div className="w-full max-w-2xl mx-auto">
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
                   type="url"
