@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Navigation } from './Navigation'
 import { ExtractionHeader } from './ExtractionHeader'
@@ -6,8 +5,9 @@ import { RequirementsCard } from './RequirementsCard'
 import { ProgressCard } from './ProgressCard'
 import { ResultsCard } from './ResultsCard'
 import { DataPreviewCard } from './DataPreviewCard'
-import { CheckCircle, FileText, Search } from 'lucide-react'
+import { CheckCircle, FileText, Search, RotateCcw } from 'lucide-react'
 import { ExtractionDashboardProps, StageInfo } from '@/types/extraction'
+import { Button } from '@/components/ui/button'
 
 export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   const [requirements, setRequirements] = useState('')
@@ -43,6 +43,41 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       details: 'Waiting to start...'
     }
   ])
+
+  const resetExtraction = () => {
+    setRequirements('')
+    setCurrentStage(0)
+    setExtractionStarted(false)
+    setIsCompleted(false)
+    setOverallProgress(0)
+    setStageStatuses([
+      {
+        name: 'Page Discovery',
+        description: 'Discovering and mapping website structure',
+        status: 'pending',
+        icon: Search,
+        progress: 0,
+        details: 'Waiting to start...',
+        discoveredPages: 0
+      },
+      {
+        name: 'Content Extraction', 
+        description: 'Extracting relevant data based on requirements',
+        status: 'pending',
+        icon: FileText,
+        progress: 0,
+        details: 'Waiting to start...'
+      },
+      {
+        name: 'Result Integration',
+        description: 'Processing and formatting extracted data',
+        status: 'pending',
+        icon: CheckCircle,
+        progress: 0,
+        details: 'Waiting to start...'
+      }
+    ])
+  }
 
   const startExtraction = () => {
     if (!requirements.trim()) return
@@ -164,6 +199,20 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       
       <main className="max-w-6xl mx-auto px-6 py-8">
         <ExtractionHeader url={url} onBack={onBack} />
+
+        {/* Reset Button */}
+        {(extractionStarted || requirements.trim()) && (
+          <div className="mb-6 flex justify-end">
+            <Button
+              onClick={resetExtraction}
+              variant="outline"
+              className="flex items-center gap-2 text-sm"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Not satisfied? Refine extraction →
+            </Button>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Requirements & Progress */}
