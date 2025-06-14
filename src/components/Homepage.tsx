@@ -64,13 +64,13 @@ export function Homepage() {
             </h1>
             
             <div className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed min-h-[3rem] px-4">
-              <span className="typing-text inline-block break-words whitespace-normal">{displayText}</span>
+              <span className="typing-text inline-block break-words whitespace-normal overflow-wrap-anywhere">{displayText}</span>
             </div>
           </div>
 
           {/* URL Input Section */}
           <div className="space-y-8">
-            <div className="w-full max-w-2xl mx-auto">
+            <div className="w-full mx-auto" style={{ maxWidth: '600px' }}>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
                   type="url"
@@ -78,12 +78,13 @@ export function Homepage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200 flex-1 min-w-0"
+                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary transition-all duration-200 flex-1 min-w-0"
                 />
                 <Button
                   onClick={handleStart}
                   disabled={!url.trim()}
                   className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap sm:w-auto w-full"
+                  style={{ minWidth: '120px' }}
                 >
                   Start
                 </Button>
