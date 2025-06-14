@@ -42,6 +42,12 @@ export function Homepage() {
     }
   }
 
+  const handleRefineExtraction = () => {
+    // Set a demo URL and navigate to extraction dashboard
+    setUrl('https://example.com')
+    setIsExtracting(true)
+  }
+
   if (isExtracting) {
     return <ExtractionDashboard url={url} onBack={() => setIsExtracting(false)} />
   }
@@ -51,13 +57,13 @@ export function Homepage() {
       {/* Enhanced Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/40 dark:from-background dark:via-background/95 dark:to-slate-900/20">
         {/* Floating Elements - Enhanced for light mode, subdued for dark mode */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-200/30 to-purple-200/30 dark:from-purple-900/15 dark:to-slate-800/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-purple-200/25 to-pink-200/25 dark:from-purple-800/12 dark:to-slate-700/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-indigo-200/20 to-blue-200/20 dark:from-purple-900/10 dark:to-slate-800/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-200/30 to-purple-200/30 dark:from-purple-900/10 dark:to-slate-800/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-purple-200/25 to-pink-200/25 dark:from-purple-800/8 dark:to-slate-700/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-indigo-200/20 to-blue-200/20 dark:from-purple-900/6 dark:to-slate-800/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
         
         {/* Additional light mode elements */}
-        <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200/20 to-blue-200/20 dark:from-purple-800/8 dark:to-slate-700/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-1/3 right-10 w-52 h-52 bg-gradient-to-br from-violet-200/25 to-purple-200/25 dark:from-purple-900/8 dark:to-slate-800/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200/20 to-blue-200/20 dark:from-purple-800/5 dark:to-slate-700/8 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/3 right-10 w-52 h-52 bg-gradient-to-br from-violet-200/25 to-purple-200/25 dark:from-purple-900/5 dark:to-slate-800/8 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '3s' }}></div>
         
         {/* Enhanced Grid Pattern */}
         <div className="absolute inset-0 opacity-30 dark:opacity-20">
@@ -117,6 +123,16 @@ export function Homepage() {
                     Start
                   </Button>
                 </div>
+              </div>
+
+              {/* Demo Link */}
+              <div className="mt-6">
+                <button
+                  onClick={handleRefineExtraction}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 underline decoration-primary/50 hover:decoration-primary underline-offset-4"
+                >
+                  Not satisfied? Refine extraction →
+                </button>
               </div>
 
               {/* Slogan */}
