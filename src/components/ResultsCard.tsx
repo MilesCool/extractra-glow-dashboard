@@ -5,9 +5,10 @@ import { CheckCircle, Clock, Download } from 'lucide-react'
 
 interface ResultsCardProps {
   isCompleted: boolean
+  onRefineExtraction?: () => void
 }
 
-export function ResultsCard({ isCompleted }: ResultsCardProps) {
+export function ResultsCard({ isCompleted, onRefineExtraction }: ResultsCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -68,7 +69,11 @@ export function ResultsCard({ isCompleted }: ResultsCardProps) {
               </Button>
 
               <div className="text-center pt-2">
-                <Button variant="link" className="text-sm text-muted-foreground">
+                <Button 
+                  variant="link" 
+                  className="text-sm text-muted-foreground"
+                  onClick={onRefineExtraction}
+                >
                   Not satisfied? Refine extraction →
                 </Button>
               </div>

@@ -44,6 +44,41 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
     }
   ])
 
+  const resetExtraction = () => {
+    setRequirements('')
+    setCurrentStage(0)
+    setExtractionStarted(false)
+    setIsCompleted(false)
+    setOverallProgress(0)
+    setStageStatuses([
+      {
+        name: 'Page Discovery',
+        description: 'Discovering and mapping website structure',
+        status: 'pending',
+        icon: Search,
+        progress: 0,
+        details: 'Waiting to start...',
+        discoveredPages: 0
+      },
+      {
+        name: 'Content Extraction', 
+        description: 'Extracting relevant data based on requirements',
+        status: 'pending',
+        icon: FileText,
+        progress: 0,
+        details: 'Waiting to start...'
+      },
+      {
+        name: 'Result Integration',
+        description: 'Processing and formatting extracted data',
+        status: 'pending',
+        icon: CheckCircle,
+        progress: 0,
+        details: 'Waiting to start...'
+      }
+    ])
+  }
+
   const startExtraction = () => {
     if (!requirements.trim()) return
     
@@ -185,7 +220,10 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
 
           {/* Right Column - Results */}
           <div className="space-y-6">
-            <ResultsCard isCompleted={isCompleted} />
+            <ResultsCard 
+              isCompleted={isCompleted} 
+              onRefineExtraction={resetExtraction}
+            />
             <DataPreviewCard isCompleted={isCompleted} />
           </div>
         </div>
