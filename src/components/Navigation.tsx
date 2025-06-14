@@ -12,8 +12,8 @@ export function Navigation() {
   }
 
   const handleLogoClick = () => {
-    // Scroll to top of the page (landing page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // Navigate to home page by reloading the page or using window.location
+    window.location.href = '/'
   }
 
   // Check if we're in a Clerk provider context
