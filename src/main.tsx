@@ -19,7 +19,15 @@ if (!PUBLISHABLE_KEY) {
 } else {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <ClerkProvider 
+        publishableKey={PUBLISHABLE_KEY}
+        appearance={{
+          elements: {
+            formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
+            card: "shadow-lg",
+          },
+        }}
+      >
         <App />
       </ClerkProvider>
     </StrictMode>
