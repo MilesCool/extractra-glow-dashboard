@@ -13,7 +13,7 @@ export function Homepage() {
   const [isExtracting, setIsExtracting] = useState(false)
   const [displayText, setDisplayText] = useState('')
   
-  const fullText = "Automatically discover pages, extract content, and integrate the output into structured data files. Powered by multi-agent intelligence."
+  const fullText = "Simply describe what you need and get your data in one click"
 
   useEffect(() => {
     let currentIndex = 0
@@ -70,17 +70,7 @@ export function Homepage() {
 
           {/* URL Input Section */}
           <div className="space-y-8">
-            {/* Emphasis text above input */}
-            <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-foreground">
-                一键获取所需数据
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                输入网站地址，智能提取您需要的所有数据
-              </p>
-            </div>
-
-            <div className="relative max-w-2xl mx-auto">
+            <div className="w-full max-w-2xl mx-auto">
               <div className="flex gap-3">
                 <Input
                   type="url"
@@ -88,12 +78,12 @@ export function Homepage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200"
+                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200 flex-1"
                 />
                 <Button
                   onClick={handleStart}
                   disabled={!url.trim()}
-                  className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap"
                 >
                   Start
                 </Button>
