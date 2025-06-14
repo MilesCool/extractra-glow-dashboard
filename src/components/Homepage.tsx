@@ -70,20 +70,20 @@ export function Homepage() {
 
           {/* URL Input Section */}
           <div className="space-y-8">
-            <div className="w-full max-w-2xl mx-auto">
-              <div className="flex gap-3">
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-3xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Input
                   type="url"
                   placeholder="Enter website URL to extract data from..."
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200 flex-1"
+                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200 flex-1 min-w-0"
                 />
                 <Button
                   onClick={handleStart}
                   disabled={!url.trim()}
-                  className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap"
+                  className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap sm:w-auto w-full"
                 >
                   Start
                 </Button>
