@@ -81,9 +81,17 @@ export function ProgressCard({
                   
                   {/* Stage specific details */}
                   {stage.details && (
-                    <p className="text-sm font-medium text-foreground mb-2">
-                      {stage.details}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground">
+                        {stage.details}
+                      </p>
+                      {/* Show loading icon for Page Discovery when discovering pages */}
+                      {stage.name === 'Page Discovery' && 
+                       stage.status === 'in-progress' && 
+                       stage.details === 'Discovering pages...' && (
+                        <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                      )}
+                    </div>
                   )}
                   
                   {/* Only show progress bar for Content Extraction and Result Integration */}
