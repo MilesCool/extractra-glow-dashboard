@@ -210,7 +210,7 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                   value={requirements}
                   onChange={(e) => setRequirements(e.target.value)}
                   rows={6}
-                  className="resize-none border-2 focus:border-primary transition-colors"
+                  className="resize-none border-2 focus:border-primary focus:ring-0 transition-colors"
                   disabled={extractionStarted}
                 />
                 {!extractionStarted && (
