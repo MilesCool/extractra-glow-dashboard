@@ -32,6 +32,7 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   const [overallProgress, setOverallProgress] = useState(0)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [extractionResult, setExtractionResult] = useState<any>(null)
+  const [previewData, setPreviewData] = useState<{headers: string[], data: any[], total_records: number} | null>(null)
   const [error, setError] = useState<string | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -199,6 +200,41 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
     setOverallProgress(100)
   }
   
+  const fetchPreviewData = async () => {
+    if (!sessionId) {
+      console.log('No sessionId available for preview')
+      return
+    }
+    
+    console.log('Fetching preview data for session:', sessionId)
+    
+    try {
+      const url = API_ENDPOINTS.EXTRACTION_PREVIEW(sessionId)
+      console.log('Preview API URL:', url)
+      
+      const response = await fetch(url)
+      console.log('Preview API response status:', response.status)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Preview API error response:', errorText)
+        throw new Error(`Failed to fetch preview data: ${response.status} ${errorText}`)
+      }
+      
+      const data = await response.json()
+      console.log('Preview data received:', data)
+      setPreviewData(data)
+    } catch (err) {
+      console.error('Error fetching preview data:', err)
+      // Set empty preview data to stop loading state
+      setPreviewData({
+        headers: [],
+        data: [],
+        total_records: 0
+      })
+    }
+  }
+  
   const handleExtractionError = (errorMessage: string) => {
     setError(errorMessage)
     setExtractionStarted(false)
@@ -226,7 +262,14 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       setError(err instanceof Error ? err.message : 'Failed to download result')
     }
   }
-  
+
+  // Get preview data when extraction is completed
+  useEffect(() => {
+    if (isCompleted) {
+      fetchPreviewData();
+    }
+  }, [isCompleted])
+
   // Cleanup WebSocket on unmount
   useEffect(() => {
     return () => {
@@ -354,7 +397,7 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                                 {index === 0 ? (
                                   // Page Discovery stage - show loading icon
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    {/* <Loader2 className="h-4 w-4 animate-spin" /> */}
                                     <span>Analyzing website...</span>
                                   </div>
                                 ) : (
@@ -455,37 +498,53 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">
-                      First 5 rows
+                      {previewData ? `First ${previewData.data.length} rows of ${previewData.total_records} total` : 'Loading preview...'}
                     </div>
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-border">
-                            <th className="text-left py-2 px-3 font-medium">Title</th>
-                            <th className="text-left py-2 px-3 font-medium">Price</th>
-                            <th className="text-left py-2 px-3 font-medium">Category</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-border/50">
-                            <td className="py-2 px-3">Sample Product 1</td>
-                            <td className="py-2 px-3">$29.99</td>
-                            <td className="py-2 px-3">Electronics</td>
-                          </tr>
-                          <tr className="border-b border-border/50">
-                            <td className="py-2 px-3">Sample Product 2</td>
-                            <td className="py-2 px-3">$15.50</td>
-                            <td className="py-2 px-3">Books</td>
-                          </tr>
-                          <tr>
-                            <td className="py-2 px-3 text-muted-foreground">...</td>
-                            <td className="py-2 px-3 text-muted-foreground">...</td>
-                            <td className="py-2 px-3 text-muted-foregroun
-
-">...</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      {previewData && previewData.headers.length > 0 ? (
+                        <div className="max-h-96 overflow-y-auto">
+                          <table className="w-full text-sm">
+                            <thead className="sticky top-0 bg-background">
+                              <tr className="border-b border-border">
+                                {previewData.headers.map((header, index) => (
+                                  <th key={index} className="text-left py-2 px-3 font-medium">
+                                    {header}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {previewData.data.map((item, rowIndex) => (
+                                <tr key={rowIndex} className="border-b border-border/50">
+                                  {previewData.headers.map((header, cellIndex) => (
+                                    <td key={cellIndex} className="py-2 px-3">
+                                      {item[header] || '-'}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                              {previewData.total_records > previewData.data.length && (
+                                <tr>
+                                  {previewData.headers.map((_, index) => (
+                                    <td key={index} className="py-2 px-3 text-muted-foreground">
+                                      ...
+                                    </td>
+                                  ))}
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : previewData && previewData.headers.length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          <p>No data available for preview</p>
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                          <p className="text-muted-foreground">Loading preview data...</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
