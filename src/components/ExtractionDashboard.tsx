@@ -42,7 +42,8 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       status: 'pending',
       icon: Search,
       progress: 0,
-      details: 'Waiting to start...'
+      details: 'Waiting to start...',
+      discoveredPages: 0
     },
     {
       name: 'Content Extraction', 
@@ -197,25 +198,7 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       <Navigation />
       
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={onBack}
-              className="h-9 w-9 p-0"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Extraction Dashboard</h1>
-              <p className="text-muted-foreground mt-1">
-                Extracting from: <span className="font-medium">{url}</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <ExtractionHeader url={url} onBack={onBack} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Requirements & Progress */}

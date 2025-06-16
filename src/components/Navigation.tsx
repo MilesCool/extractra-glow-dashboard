@@ -11,6 +11,11 @@ export function Navigation() {
     }
   }
 
+  const handleLogoClick = () => {
+    // Navigate to home page by reloading the page or using window.location
+    window.location.href = '/'
+  }
+
   // Check if we're in a Clerk provider context
   const hasClerkProvider = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY)
 
@@ -20,8 +25,13 @@ export function Navigation() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-8">
-            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Extractra
+            <div 
+              className="cursor-pointer group transition-all duration-200 hover:scale-105"
+              onClick={handleLogoClick}
+            >
+              <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Extractra
+              </div>
             </div>
           </div>
 
@@ -46,19 +56,28 @@ export function Navigation() {
               <>
                 <SignedOut>
                   <SignInButton mode="modal">
-                    <Button variant="outline">
-                      Login
+                    <Button variant="outline" className="hover:bg-accent hover:text-accent-foreground transition-colors">
+                      Sign In
                     </Button>
                   </SignInButton>
                 </SignedOut>
                 
                 <SignedIn>
-                  <UserButton />
+                  <UserButton 
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-10 h-10",
+                        userButtonPopoverCard: "shadow-lg border border-border",
+                        userButtonPopoverActionButton: "hover:bg-accent hover:text-accent-foreground",
+                      }
+                    }}
+                    afterSignOutUrl="/"
+                  />
                 </SignedIn>
               </>
             ) : (
               <Button variant="outline" disabled>
-                Login (Setup Required)
+                Sign In (Setup Required)
               </Button>
             )}
             
@@ -72,19 +91,28 @@ export function Navigation() {
               <>
                 <SignedOut>
                   <SignInButton mode="modal">
-                    <Button variant="outline" size="sm">
-                      Login
+                    <Button variant="outline" size="sm" className="hover:bg-accent hover:text-accent-foreground transition-colors">
+                      Sign In
                     </Button>
                   </SignInButton>
                 </SignedOut>
                 
                 <SignedIn>
-                  <UserButton />
+                  <UserButton 
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-8 h-8",
+                        userButtonPopoverCard: "shadow-lg border border-border",
+                        userButtonPopoverActionButton: "hover:bg-accent hover:text-accent-foreground",
+                      }
+                    }}
+                    afterSignOutUrl="/"
+                  />
                 </SignedIn>
               </>
             ) : (
               <Button variant="outline" size="sm" disabled>
-                Login
+                Sign In
               </Button>
             )}
           </div>

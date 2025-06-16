@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Navigation } from './Navigation'
-import { ExtractionDashboard } from './ExtractionDashboard'
 import { HowItWorksSection } from './HowItWorksSection'
 import { FeaturesSection } from './FeaturesSection'
 import { Footer } from './Footer'
 
 export function Homepage() {
   const [url, setUrl] = useState('')
-  const [isExtracting, setIsExtracting] = useState(false)
   const [displayText, setDisplayText] = useState('')
+  const navigate = useNavigate()
   
+  const fullText = "Simply describe what you need and get your data in one click"
   const fullText = "Simply describe what you need and get your data in one click"
 
   useEffect(() => {
@@ -31,7 +32,9 @@ export function Homepage() {
   const handleStart = () => {
     if (url.trim()) {
       console.log('Starting extraction for:', url)
-      setIsExtracting(true)
+      // Generate a simple task ID based on timestamp
+      const taskId = Date.now().toString()
+      navigate(`/extraction/${taskId}`)
     }
   }
 
@@ -39,10 +42,6 @@ export function Homepage() {
     if (e.key === 'Enter') {
       handleStart()
     }
-  }
-
-  if (isExtracting) {
-    return <ExtractionDashboard url={url} onBack={() => setIsExtracting(false)} />
   }
 
   return (
@@ -115,14 +114,15 @@ export function Homepage() {
         </div>
       </main>
 
-      {/* How It Works Section */}
-      <HowItWorksSection />
+        {/* How It Works Section */}
+        <HowItWorksSection />
 
-      {/* Features Section */}
-      <FeaturesSection />
+        {/* Features Section */}
+        <FeaturesSection />
 
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </div>
     </div>
   )
 }
