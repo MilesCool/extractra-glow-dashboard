@@ -34,11 +34,12 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   const [extractionResult, setExtractionResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const [stageStatuses, setStageStatuses] = useState<StageInfo[]>([
     {
       name: 'Page Discovery',
-      description: 'Discovering and mapping website structure',
+      description: 'Analyzing website structure and discovering pages',
       status: 'pending',
       icon: Search,
       progress: 0,
@@ -98,40 +99,88 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   }
   
   const connectWebSocket = (sessionId: string) => {
-    const ws = new WebSocket(API_ENDPOINTS.WEBSOCKET_EXTRACTION(sessionId))
+    const wsUrl = API_ENDPOINTS.WEBSOCKET_EXTRACTION(sessionId)
+    console.log('Connecting to WebSocket:', wsUrl)
+    
+    const ws = new WebSocket(wsUrl)
     wsRef.current = ws
     
+    // Set connection timeout
+    const connectionTimeout = setTimeout(() => {
+      if (ws.readyState === WebSocket.CONNECTING) {
+        ws.close()
+        setError('Connection timeout - please try again')
+      }
+    }, 10000) // 10 second timeout
+    
     ws.onopen = () => {
-      console.log('WebSocket connected')
+      clearTimeout(connectionTimeout)
+      console.log('Secure WebSocket connected successfully')
+      
+      // Send initial ping to establish connection
+      ws.send(JSON.stringify({ type: 'ping' }))
     }
     
     ws.onmessage = (event) => {
-      const message = JSON.parse(event.data)
-      
-      switch (message.type) {
-        case 'stage_update':
-          handleStageUpdate(message.stage_index, message.stage, message.overall_progress)
-          break
-        case 'extraction_completed':
-          handleExtractionCompleted(message.result)
-          break
-        case 'extraction_error':
-          handleExtractionError(message.error)
-          break
+      try {
+        const message = JSON.parse(event.data)
+        console.log('WebSocket message received:', message)
+        
+        switch (message.type) {
+          case 'pong':
+            console.log('WebSocket connection confirmed')
+            break
+          case 'stage_update':
+            handleStageUpdate(message.stage_index, message.stage, message.overall_progress)
+            break
+          case 'extraction_completed':
+            handleExtractionCompleted(message.result)
+            break
+          case 'extraction_error':
+            handleExtractionError(message.error)
+            break
+          default:
+            console.log('Unknown message type:', message.type)
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error)
       }
     }
     
-    ws.onclose = () => {
-      console.log('WebSocket disconnected')
+    ws.onclose = (event) => {
+      clearTimeout(connectionTimeout)
+      console.log('WebSocket disconnected:', event.code, event.reason)
+      
+      // Handle different close codes
+      if (event.code === 1006) {
+        setError('Connection lost - please refresh the page')
+      } else if (event.code !== 1000) {
+        setError('Connection error occurred')
+      }
     }
     
     ws.onerror = (error) => {
+      clearTimeout(connectionTimeout)
       console.error('WebSocket error:', error)
-      setError('Connection error occurred')
+      setError('Failed to establish secure connection')
     }
+    
+    // Keep connection alive with periodic pings
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'ping' }))
+      } else {
+        clearInterval(pingInterval)
+      }
+    }, 30000) // Ping every 30 seconds
+    
+    // Store ping interval for cleanup
+    pingIntervalRef.current = pingInterval
   }
   
   const handleStageUpdate = (stageIndex: number, stage: any, overallProgress: number) => {
+    console.log('Received stage update:', { stageIndex, stage, overallProgress })
+    
     setStageStatuses(prev => prev.map((s, index) => 
       index === stageIndex ? {
         ...s,
@@ -173,9 +222,6 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-      
-      // Go back to homepage after download
-      onBack()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to download result')
     }
@@ -186,6 +232,9 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
     return () => {
       if (wsRef.current) {
         wsRef.current.close()
+      }
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current)
       }
     }
   }, [])
@@ -291,9 +340,6 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                                  stage.status === 'in-progress' ? 'In Progress' : 'Pending'}
                               </span>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {stage.description}
-                            </p>
                             
                             {/* Stage specific details */}
                             {stage.details && (
@@ -302,9 +348,19 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                               </p>
                             )}
                             
+                            {/* Progress display based on stage type */}
                             {stage.status === 'in-progress' && (
                               <div className="mt-2">
-                                <Progress value={stage.progress || 0} className="h-2" />
+                                {index === 0 ? (
+                                  // Page Discovery stage - show loading icon
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <span>Analyzing website...</span>
+                                  </div>
+                                ) : (
+                                  // Other stages - show progress bar
+                                  <Progress value={stage.progress || 0} className="h-2" />
+                                )}
                               </div>
                             )}
                           </div>
