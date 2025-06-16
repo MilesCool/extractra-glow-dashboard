@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -7,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Navigation } from './Navigation'
 import { CheckCircle, Clock, FileText, Search, Download, ArrowLeft, Loader2 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config/api'
+import { ExtractionHeader } from './ExtractionHeader'
 
 interface ExtractionDashboardProps {
   url: string
@@ -43,7 +43,6 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       icon: Search,
       progress: 0,
       details: 'Waiting to start...',
-      discoveredPages: 0
     },
     {
       name: 'Content Extraction', 
@@ -190,8 +189,6 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
       }
     }
   }, [])
-
-
 
   return (
     <div className="min-h-screen bg-background">

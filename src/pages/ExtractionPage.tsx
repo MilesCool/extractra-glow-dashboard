@@ -1,28 +1,27 @@
-
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { ExtractionDashboard } from '@/components/ExtractionDashboard'
 
 const ExtractionPage = () => {
   const { taskId } = useParams<{ taskId: string }>()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
-  // For now, we'll use a mock URL based on taskId
-  // In a real app, you'd fetch the task details from an API
-  const mockUrl = `https://example-${taskId}.com`
+  // Get the actual URL from query parameters
+  const url = searchParams.get('url')
 
   const handleBack = () => {
     navigate('/')
   }
 
-  if (!taskId) {
+  if (!taskId || !url) {
     navigate('/')
     return null
   }
 
   return (
     <ThemeProvider defaultTheme="light">
-      <ExtractionDashboard url={mockUrl} onBack={handleBack} />
+      <ExtractionDashboard url={url} onBack={handleBack} />
     </ThemeProvider>
   )
 }
