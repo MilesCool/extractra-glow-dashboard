@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +12,7 @@ export function Homepage() {
   const [isExtracting, setIsExtracting] = useState(false)
   const [displayText, setDisplayText] = useState('')
   
-  const fullText = "Automatically discover pages, extract content, and integrate the output into structured data files. Powered by multi-agent intelligence."
+  const fullText = "Simply describe what you need and get your data in one click"
 
   useEffect(() => {
     let currentIndex = 0
@@ -52,7 +51,7 @@ export function Homepage() {
       
       {/* Hero Section */}
       <main id="hero" className="flex-1 flex items-center justify-center px-6 py-20">
-        <div className="max-w-3xl mx-auto text-center space-y-12 animate-fade-in">
+        <div className="max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
           {/* Main Heading */}
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
@@ -63,24 +62,14 @@ export function Homepage() {
               <span className="text-foreground">Data Extraction</span>
             </h1>
             
-            <div className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed min-h-[3rem]">
+            <div className="text-xl text-muted-foreground w-full sm:w-96 md:w-[32rem] lg:w-[40rem] mx-auto leading-relaxed min-h-[3rem]">
               <span className="typing-text">{displayText}</span>
             </div>
           </div>
 
           {/* URL Input Section */}
           <div className="space-y-8">
-            {/* Emphasis text above input */}
-            <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-foreground">
-                一键获取所需数据
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                输入网站地址，智能提取您需要的所有数据
-              </p>
-            </div>
-
-            <div className="relative max-w-2xl mx-auto">
+            <div className="relative w-full sm:w-96 md:w-[32rem] lg:w-[40rem] mx-auto">
               <div className="flex gap-3">
                 <Input
                   type="url"
@@ -88,7 +77,7 @@ export function Homepage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-all duration-200"
+                  className="flex-1 h-14 text-lg px-6 bg-card border-2 border-border focus:border-primary focus:ring-0 transition-colors duration-200"
                 />
                 <Button
                   onClick={handleStart}
@@ -103,7 +92,7 @@ export function Homepage() {
             {/* Slogan */}
             <div className="space-y-4">
               <p className="text-lg font-medium text-custom">
-                Transform any website into structured data in seconds
+                Transform any website into structured data in minutes
               </p>
               
               {/* Feature bullets */}

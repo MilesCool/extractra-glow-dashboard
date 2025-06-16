@@ -123,8 +123,9 @@
 
 .typing-text {
   display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
   border-right: 2px solid;
-  animation: typing 3s steps(30, end), blink 1s step-end infinite;
+  animation: blink 1s step-end infinite;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.6;
 }

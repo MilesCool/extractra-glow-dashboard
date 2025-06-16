@@ -6,7 +6,7 @@ export function FeaturesSection() {
     {
       icon: Zap,
       title: "Lightning Fast",
-      description: "Extract data from websites in seconds, not hours. Our optimized multi-agent system ensures rapid processing."
+      description: "Extract data from websites in minutes, not hours. Our optimized multi-agent system ensures rapid processing."
     },
     {
       icon: Shield,

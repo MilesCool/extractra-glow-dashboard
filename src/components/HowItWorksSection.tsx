@@ -9,9 +9,9 @@ export function HowItWorksSection() {
           <h2 className="text-4xl font-bold text-foreground mb-4">
             How It Works
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          {/* <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Our intelligent multi-agent system processes your requests through three sophisticated stages
-          </p>
+          </p> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

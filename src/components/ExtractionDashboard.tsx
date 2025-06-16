@@ -1,11 +1,12 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Navigation } from './Navigation'
 import { CheckCircle, Clock, FileText, Search, Download, ArrowLeft, Loader2 } from 'lucide-react'
+import { API_ENDPOINTS } from '../config/api'
 
 interface ExtractionDashboardProps {
   url: string
@@ -29,6 +30,10 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
   const [extractionStarted, setExtractionStarted] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [overallProgress, setOverallProgress] = useState(0)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [extractionResult, setExtractionResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
+  const wsRef = useRef<WebSocket | null>(null)
 
   const [stageStatuses, setStageStatuses] = useState<StageInfo[]>([
     {
@@ -57,116 +62,135 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
     }
   ])
 
-  const startExtraction = () => {
+  const startExtraction = async () => {
     if (!requirements.trim()) return
     
     setExtractionStarted(true)
-    simulateExtraction()
-  }
-
-  const simulateExtraction = () => {
-    let stage = 0
+    setError(null)
     
-    const updateStage = () => {
-      // Update stage statuses
-      setStageStatuses(prev => prev.map((s, index) => {
-        if (index < stage) {
-          return { ...s, status: 'completed' as ExtractionStage, progress: 100 }
-        } else if (index === stage) {
-          return { ...s, status: 'in-progress' as ExtractionStage }
-        } else {
-          return { ...s, status: 'pending' as ExtractionStage, progress: 0 }
-        }
-      }))
+    try {
+      // Start extraction via API
+      const response = await fetch(API_ENDPOINTS.EXTRACTION_START, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: url,
+          requirements: requirements
+        })
+      })
       
-      setCurrentStage(stage)
-      
-      // Simulate progress for current stage
-      if (stage === 0) {
-        // Page Discovery stage
-        let discoveredPages = 0
-        const maxPages = 15
-        const discoveryInterval = setInterval(() => {
-          discoveredPages += Math.floor(Math.random() * 3) + 1
-          if (discoveredPages > maxPages) discoveredPages = maxPages
-          
-          const progress = (discoveredPages / maxPages) * 100
-          setStageStatuses(prev => prev.map((s, index) => 
-            index === stage ? {
-              ...s,
-              progress,
-              details: `Discovered ${discoveredPages} subpages`
-            } : s
-          ))
-          
-          if (discoveredPages >= maxPages) {
-            clearInterval(discoveryInterval)
-            setTimeout(() => {
-              stage++
-              if (stage < 3) updateStage()
-            }, 500)
-          }
-        }, 300)
-      } else if (stage === 1) {
-        // Content Extraction stage
-        let extractedPages = 0
-        const totalPages = 15
-        const extractionInterval = setInterval(() => {
-          extractedPages += 1
-          if (extractedPages > totalPages) extractedPages = totalPages
-          
-          const progress = (extractedPages / totalPages) * 100
-          setStageStatuses(prev => prev.map((s, index) => 
-            index === stage ? {
-              ...s,
-              progress,
-              details: `Extracted ${extractedPages}/${totalPages} pages`
-            } : s
-          ))
-          
-          if (extractedPages >= totalPages) {
-            clearInterval(extractionInterval)
-            setTimeout(() => {
-              stage++
-              if (stage < 3) updateStage()
-            }, 500)
-          }
-        }, 200)
-      } else if (stage === 2) {
-        // Result Integration stage
-        let integrationProgress = 0
-        const integrationSteps = ['Processing data...', 'Formatting results...', 'Generating file...', 'Finalizing...']
-        let currentStep = 0
-        
-        const integrationInterval = setInterval(() => {
-          integrationProgress += 25
-          
-          setStageStatuses(prev => prev.map((s, index) => 
-            index === stage ? {
-              ...s,
-              progress: integrationProgress,
-              details: integrationSteps[currentStep] || 'Completing...'
-            } : s
-          ))
-          
-          currentStep++
-          
-          if (integrationProgress >= 100) {
-            clearInterval(integrationInterval)
-            setTimeout(() => {
-              setStageStatuses(prev => prev.map(s => ({ ...s, status: 'completed' as ExtractionStage, progress: 100 })))
-              setIsCompleted(true)
-              setOverallProgress(100)
-            }, 500)
-          }
-        }, 800)
+      if (!response.ok) {
+        throw new Error('Failed to start extraction')
       }
       
-      setOverallProgress(((stage + 1) / 3) * 100)
+      const data = await response.json()
+      setSessionId(data.session_id)
+      
+      // Connect to WebSocket for real-time updates
+      connectWebSocket(data.session_id)
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start extraction')
+      setExtractionStarted(false)
+    }
+  }
+  
+  const connectWebSocket = (sessionId: string) => {
+    const ws = new WebSocket(API_ENDPOINTS.WEBSOCKET_EXTRACTION(sessionId))
+    wsRef.current = ws
+    
+    ws.onopen = () => {
+      console.log('WebSocket connected')
     }
     
-    setTimeout(updateStage, 1000)
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data)
+      
+      switch (message.type) {
+        case 'stage_update':
+          handleStageUpdate(message.stage_index, message.stage, message.overall_progress)
+          break
+        case 'extraction_completed':
+          handleExtractionCompleted(message.result)
+          break
+        case 'extraction_error':
+          handleExtractionError(message.error)
+          break
+      }
+    }
+    
+    ws.onclose = () => {
+      console.log('WebSocket disconnected')
+    }
+    
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+      setError('Connection error occurred')
+    }
   }
+  
+  const handleStageUpdate = (stageIndex: number, stage: any, overallProgress: number) => {
+    setStageStatuses(prev => prev.map((s, index) => 
+      index === stageIndex ? {
+        ...s,
+        status: stage.status,
+        progress: stage.progress,
+        details: stage.details
+      } : s
+    ))
+    setOverallProgress(overallProgress)
+    setCurrentStage(stageIndex)
+  }
+  
+  const handleExtractionCompleted = (result: any) => {
+    setIsCompleted(true)
+    setExtractionResult(result)
+    setOverallProgress(100)
+  }
+  
+  const handleExtractionError = (errorMessage: string) => {
+    setError(errorMessage)
+    setExtractionStarted(false)
+  }
+  
+  const downloadResult = async () => {
+    if (!sessionId) return
+    
+    try {
+      const response = await fetch(API_ENDPOINTS.EXTRACTION_DOWNLOAD(sessionId))
+      if (!response.ok) {
+        throw new Error('Failed to download result')
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `extraction_${sessionId}.csv`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      
+      // Go back to homepage after download
+      onBack()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to download result')
+    }
+  }
+  
+  // Cleanup WebSocket on unmount
+  useEffect(() => {
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close()
+      }
+    }
+  }, [])
+
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -213,6 +237,11 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                   className="resize-none border-2 focus:border-primary transition-colors"
                   disabled={extractionStarted}
                 />
+                {error && (
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+                  </div>
+                )}
                 {!extractionStarted && (
                   <Button 
                     onClick={startExtraction}
@@ -345,24 +374,25 @@ export function ExtractionDashboard({ url, onBack }: ExtractionDashboardProps) {
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
                             <span className="text-muted-foreground">Format:</span>
-                            <span className="ml-2 font-medium">CSV File</span>
+                            <span className="ml-2 font-medium">{extractionResult?.format || 'CSV File'}</span>
                           </div>
                           <div>
                             <span className="text-muted-foreground">Size:</span>
-                            <span className="ml-2 font-medium">1.2 MB</span>
+                            <span className="ml-2 font-medium">{extractionResult?.size || '1.2 MB'}</span>
                           </div>
                           <div>
                             <span className="text-muted-foreground">Records:</span>
-                            <span className="ml-2 font-medium">2,847</span>
+                            <span className="ml-2 font-medium">{extractionResult?.records || '2,847'}</span>
                           </div>
                           <div>
                             <span className="text-muted-foreground">Fields:</span>
-                            <span className="ml-2 font-medium">12</span>
+                            <span className="ml-2 font-medium">{extractionResult?.fields || '12'}</span>
                           </div>
                         </div>
                       </div>
 
                       <Button 
+                        onClick={downloadResult}
                         className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-105 transition-all duration-200"
                       >
                         <Download className="h-5 w-5 mr-2" />
