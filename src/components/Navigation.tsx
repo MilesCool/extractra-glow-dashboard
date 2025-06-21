@@ -77,7 +77,7 @@ export function Navigation() {
               </>
             ) : (
               <Button variant="outline" disabled>
-                Sign In (Setup Required)
+                Sign In
               </Button>
             )}
             
