@@ -50,7 +50,7 @@ export function Homepage() {
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/40 dark:from-background dark:via-background/95 dark:to-primary/5">
         
         {/* Enhanced Grid Pattern - Limited to hero section */}
-        <div className="absolute inset-0 opacity-30 dark:opacity-20" style={{ height: '100vh' }}>
+        <div className="absolute inset-0 opacity-30 dark:opacity-30" style={{ height: '100vh' }}>
           <div className="absolute inset-0" style={{
             backgroundImage: `
               linear-gradient(rgba(139, 92, 246, 0.4) 1px, transparent 1px),
