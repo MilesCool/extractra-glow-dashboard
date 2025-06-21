@@ -5,8 +5,8 @@ export function FeaturesSection() {
   const features = [
     {
       icon: Zap,
-      title: "Lightning Fast",
-      description: "Extract data from websites in minutes, not hours. Our optimized multi-agent system ensures rapid processing."
+      title: "Quick Processing",
+      description: "Extract data from websites in just a few minutes. Our optimized multi-agent system ensures rapid processing and download."
     },
     {
       icon: Shield,
@@ -26,7 +26,7 @@ export function FeaturesSection() {
     {
       icon: Database,
       title: "Structured Output",
-      description: "Get clean, organized data in your preferred format - CSV, JSON, Excel, or custom schemas."
+      description: "Get clean, organized data in CSV format. More output formats coming soon to meet your diverse needs."
     },
     {
       icon: Play,

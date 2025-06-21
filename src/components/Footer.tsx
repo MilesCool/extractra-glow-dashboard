@@ -3,19 +3,19 @@ export function Footer() {
   return (
     <footer className="bg-card border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-8"> */}
           {/* Company Info */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Extractra
             </div>
             <p className="text-muted-foreground">
               Intelligent data extraction powered by multi-agent AI technology.
             </p>
-          </div>
+          </div> */}
 
           {/* Product */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="font-semibold text-foreground">Product</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
@@ -23,10 +23,10 @@ export function Footer() {
               <li><a href="#" className="hover:text-foreground transition-colors">Documentation</a></li>
               <li><a href="#" className="hover:text-foreground transition-colors">Support</a></li>
             </ul>
-          </div>
+          </div> */}
 
           {/* How it Works */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="font-semibold text-foreground">How it Works</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li><a href="#how-it-works" className="hover:text-foreground transition-colors">Overview</a></li>
@@ -34,10 +34,10 @@ export function Footer() {
               <li><a href="#" className="hover:text-foreground transition-colors">Examples</a></li>
               <li><a href="#" className="hover:text-foreground transition-colors">Best Practices</a></li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Features */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="font-semibold text-foreground">Features</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li><a href="#features" className="hover:text-foreground transition-colors">All Features</a></li>
@@ -45,10 +45,10 @@ export function Footer() {
               <li><a href="#" className="hover:text-foreground transition-colors">Smart Extraction</a></li>
               <li><a href="#" className="hover:text-foreground transition-colors">Data Integration</a></li>
             </ul>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
-        <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-border flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
             © 2024 Extractra. All rights reserved.
           </p>
